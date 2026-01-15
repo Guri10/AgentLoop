@@ -1,8 +1,25 @@
 # AgentLoop
 
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![OpenAI](https://img.shields.io/badge/OpenAI-API-412991.svg)](https://openai.com/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 **An Autonomous Agent System demonstrating LLM-based decision-making in a closed-loop control architecture.**
 
 AgentLoop is not a chatbot or a prompt chain—it's a closed-loop decision system where an LLM repeatedly decides what action to take next based on evolving state until the goal is satisfied.
+
+## 🎬 Quick Demo
+
+```bash
+# Install
+pip install -e .
+
+# Run
+agentloop "Calculate first 10 Fibonacci numbers and save to file"
+```
+
+**Or try the [Web Interface](https://github.com/YOUR_USERNAME/AgentLoop)** (coming soon on Streamlit Cloud)
 
 ## 🎯 Core Objective
 

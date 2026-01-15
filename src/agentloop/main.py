@@ -76,15 +76,22 @@ def run_agent(goal: str, **kwargs):
     return agent.run(goal)
 
 
-if __name__ == "__main__":
+def cli():
+    """Command-line interface entry point."""
     import sys
     
     if len(sys.argv) < 2:
-        print("Usage: python -m agentloop.main '<goal>'")
+        print("Usage: agentloop '<goal>'")
         print("\nExample:")
-        print("  python -m agentloop.main 'Search for recent AI news and summarize it'")
+        print("  agentloop 'Search for recent AI news and summarize it'")
+        print("\nOr:")
+        print("  python -m agentloop.main '<goal>'")
         sys.exit(1)
     
-    goal = sys.argv[1]
+    goal = " ".join(sys.argv[1:])
     run_agent(goal)
+
+
+if __name__ == "__main__":
+    cli()
 

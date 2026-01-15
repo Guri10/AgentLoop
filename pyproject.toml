@@ -4,6 +4,20 @@ version = "0.1.0"
 description = "An autonomous agent system demonstrating LLM-based decision-making in a closed-loop control architecture"
 readme = "README.md"
 requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "AgentLoop Contributors"},
+]
+keywords = ["ai", "agents", "llm", "openai", "autonomous", "decision-making"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
     "openai>=1.12.0",
     "pydantic>=2.6.0",
@@ -12,12 +26,25 @@ dependencies = [
     "python-dotenv>=1.0.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/YOUR_USERNAME/AgentLoop"
+Repository = "https://github.com/YOUR_USERNAME/AgentLoop"
+Documentation = "https://github.com/YOUR_USERNAME/AgentLoop#readme"
+Issues = "https://github.com/YOUR_USERNAME/AgentLoop/issues"
+
+[project.scripts]
+agentloop = "agentloop.main:cli"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.0",
     "black>=24.0.0",
     "ruff>=0.2.0",
+]
+web = [
+    "streamlit>=1.31.0",
+    "plotly>=5.18.0",
 ]
 
 [build-system]
