@@ -13,6 +13,7 @@ class ActionType(str, Enum):
     """Available action types the agent can execute."""
     
     SEARCH_WEB = "search_web"
+    READ_URL = "read_url"
     RUN_CODE = "run_code"
     WRITE_FILE = "write_file"
     FINISH = "finish"
@@ -29,6 +30,13 @@ class SearchWebInput(ActionInput):
     
     query: str = Field(..., description="The search query to execute")
     num_results: int = Field(default=5, ge=1, le=10, description="Number of results to return")
+
+
+class ReadUrlInput(ActionInput):
+    """Input schema for reading URL content."""
+    
+    url: str = Field(..., description="URL to fetch and read")
+    max_length: int = Field(default=5000, ge=100, le=50000, description="Maximum characters to return")
 
 
 class RunCodeInput(ActionInput):
@@ -69,6 +77,7 @@ class ActionDecision(BaseModel):
         """Convert generic input dict to typed input model."""
         input_map = {
             ActionType.SEARCH_WEB: SearchWebInput,
+            ActionType.READ_URL: ReadUrlInput,
             ActionType.RUN_CODE: RunCodeInput,
             ActionType.WRITE_FILE: WriteFileInput,
             ActionType.FINISH: FinishInput,

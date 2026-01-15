@@ -94,14 +94,24 @@ AVAILABLE ACTIONS:
 1. search_web - Search the internet for information
    Input: {"query": "search terms", "num_results": 5}
 
-2. run_code - Execute Python code for analysis/computation
+2. read_url - Fetch and read content from a specific URL
+   Input: {"url": "https://example.com", "max_length": 5000}
+
+3. run_code - Execute Python code for analysis/computation
    Input: {"code": "python code as string", "timeout": 30}
 
-3. write_file - Save content to a file
+4. write_file - Save content to a file
    Input: {"filename": "output.txt", "content": "file content"}
 
-4. finish - Complete the task and terminate
+5. finish - Complete the task and terminate
    Input: {"summary": "what was accomplished", "artifacts": ["file1.txt"]}
+
+WORKFLOW TIPS:
+- Use search_web first to find relevant URLs
+- Then use read_url to get actual content from promising URLs
+- Use run_code to process/analyze data if needed
+- Use write_file to save results
+- Choose finish when goal is complete
 
 CRITICAL RULES:
 - You must output ONLY valid JSON in this exact format:

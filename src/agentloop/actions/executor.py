@@ -16,6 +16,7 @@ from ..core.schemas import (
     ActionResult,
     ActionType,
     SearchWebInput,
+    ReadUrlInput,
     RunCodeInput,
     WriteFileInput,
     FinishInput,
@@ -48,6 +49,7 @@ class ActionExecutor:
         """
         handlers = {
             ActionType.SEARCH_WEB: self._search_web,
+            ActionType.READ_URL: self._read_url,
             ActionType.RUN_CODE: self._run_code,
             ActionType.WRITE_FILE: self._write_file,
             ActionType.FINISH: self._finish,
@@ -123,6 +125,73 @@ class ActionExecutor:
                 action=ActionType.SEARCH_WEB,
                 success=False,
                 error=f"Search failed: {str(e)}"
+            )
+    
+    def _read_url(self, input_data: Dict[str, Any]) -> ActionResult:
+        """
+        Fetch and parse content from a URL.
+        
+        Returns cleaned text content from the page.
+        """
+        try:
+            read_input = ReadUrlInput(**input_data)
+            
+            # Fetch URL
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+            }
+            
+            response = requests.get(read_input.url, headers=headers, timeout=15)
+            response.raise_for_status()
+            
+            # Parse HTML
+            soup = BeautifulSoup(response.text, "html.parser")
+            
+            # Remove script and style elements
+            for script in soup(["script", "style", "nav", "footer", "header", "aside"]):
+                script.decompose()
+            
+            # Get text
+            text = soup.get_text()
+            
+            # Clean up whitespace
+            lines = (line.strip() for line in text.splitlines())
+            chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+            text = '\n'.join(chunk for chunk in chunks if chunk)
+            
+            # Truncate if needed
+            truncated = len(text) > read_input.max_length
+            if truncated:
+                text = text[:read_input.max_length] + "\n\n[Content truncated...]"
+            
+            return ActionResult(
+                action=ActionType.READ_URL,
+                success=True,
+                output=text,
+                metadata={
+                    "url": read_input.url,
+                    "length": len(text),
+                    "truncated": truncated
+                }
+            )
+            
+        except requests.Timeout:
+            return ActionResult(
+                action=ActionType.READ_URL,
+                success=False,
+                error="Request timed out after 15 seconds"
+            )
+        except requests.RequestException as e:
+            return ActionResult(
+                action=ActionType.READ_URL,
+                success=False,
+                error=f"Failed to fetch URL: {str(e)}"
+            )
+        except Exception as e:
+            return ActionResult(
+                action=ActionType.READ_URL,
+                success=False,
+                error=f"Error reading URL: {str(e)}"
             )
     
     def _run_code(self, input_data: Dict[str, Any]) -> ActionResult:
