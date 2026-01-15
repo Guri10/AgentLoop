@@ -62,17 +62,21 @@ st.markdown("""
 
 def init_session_state():
     """Initialize session state variables."""
+    # Use session-specific IDs to prevent cross-user contamination
     if "execution_history" not in st.session_state:
         st.session_state.execution_history = []
     if "current_state" not in st.session_state:
         st.session_state.current_state = None
     if "is_running" not in st.session_state:
         st.session_state.is_running = False
+    if "session_id" not in st.session_state:
+        import uuid
+        st.session_state.session_id = str(uuid.uuid4())[:8]
 
 
 def display_header():
     """Display the app header."""
-    st.markdown('<div class="main-header">🤖 AgentLoop</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header">AgentLoop</div>', unsafe_allow_html=True)
     st.markdown(
         "<p style='text-align: center; color: #666;'>"
         "Autonomous Agent System with LLM-based Decision Making"
@@ -85,19 +89,21 @@ def display_header():
 def sidebar_config():
     """Render sidebar configuration."""
     with st.sidebar:
-        st.header("⚙️ Configuration")
+        st.header("Configuration")
         
-        # API Key
-        api_key = os.getenv("OPENAI_API_KEY", "")
-        api_key_input = st.text_input(
-            "OpenAI API Key",
-            value=api_key if api_key else "",
-            type="password",
-            help="Your OpenAI API key. Will use environment variable if available."
-        )
+        # Check if API key exists (from Streamlit secrets or env)
+        api_key = st.secrets.get("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY", ""))
         
-        if api_key_input:
-            os.environ["OPENAI_API_KEY"] = api_key_input
+        if not api_key:
+            st.error("API key not configured. Please contact the administrator.")
+            st.stop()
+        
+        # Set in environment (hidden from users)
+        os.environ["OPENAI_API_KEY"] = api_key
+        
+        # Show that API is configured (but not the key itself)
+        st.success("API Key: Configured")
+        st.caption("Using administrator's API key")
         
         # Model selection
         model = st.selectbox(
@@ -116,26 +122,25 @@ def sidebar_config():
             help="Maximum number of decision steps"
         )
         
-        # Output directory
-        output_dir = st.text_input(
-            "Output Directory",
-            value="./output/streamlit",
-            help="Where to save generated files"
-        )
+        # Output directory (session-specific to prevent cross-contamination)
+        output_dir = f"./output/streamlit_{st.session_state.session_id}"
         
         st.markdown("---")
         
         # Info
-        st.subheader("ℹ️ About")
+        st.subheader("About")
         st.markdown("""
         **AgentLoop** demonstrates autonomous agents with:
-        - 🔄 Explicit decision loop
-        - 🎯 Goal-driven behavior
-        - 🛡️ Error recovery
-        - 📊 Full observability
+        - Explicit decision loop
+        - Goal-driven behavior
+        - Error recovery
+        - Full observability
         
-        [GitHub](https://github.com/YOUR_USERNAME/AgentLoop) | 
-        [Docs](https://github.com/YOUR_USERNAME/AgentLoop#readme)
+        **Note:** This is a demo using the author's API key. 
+        Please be considerate with usage.
+        
+        [GitHub](https://github.com/Guri10/AgentLoop) | 
+        [PyPI](https://pypi.org/project/autonomous-agentloop/)
         """)
         
         return {
@@ -214,7 +219,7 @@ def run_agent_with_ui(goal: str, config: dict):
     try:
         # Check API key
         if not os.getenv("OPENAI_API_KEY"):
-            st.error("❌ Please set your OpenAI API key in the sidebar")
+            st.error("API key not configured. Please contact the administrator.")
             return
         
         # Create agent
