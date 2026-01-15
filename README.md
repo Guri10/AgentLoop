@@ -12,14 +12,14 @@ AgentLoop is not a chatbot or a prompt chain—it's a closed-loop decision syste
 ## 🎬 Quick Demo
 
 ```bash
-# Install
-pip install -e .
+# Install from PyPI
+pip install autonomous-agentloop
 
 # Run
 agentloop "Calculate first 10 Fibonacci numbers and save to file"
 ```
 
-**Or try the [Web Interface](https://github.com/YOUR_USERNAME/AgentLoop)** (coming soon on Streamlit Cloud)
+**Or try the [Live Web Demo](https://github.com/Guri10/AgentLoop)** on Streamlit Cloud
 
 ## 🎯 Core Objective
 
@@ -90,14 +90,12 @@ while goal_not_satisfied:
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/YOUR_USERNAME/AgentLoop.git
+# Option 1: Install from PyPI (recommended)
+pip install autonomous-agentloop
+
+# Option 2: Install from source
+git clone https://github.com/Guri10/AgentLoop.git
 cd AgentLoop
-
-# Install with uv (recommended)
-uv sync
-
-# Or with pip
 pip install -e .
 ```
 
