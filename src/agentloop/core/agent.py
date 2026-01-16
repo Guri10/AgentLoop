@@ -65,7 +65,7 @@ class AutonomousAgent:
         state = AgentState(goal=goal, max_steps=self.max_steps)
         
         self._log(f"\n{'='*60}")
-        self._log(f"🎯 GOAL: {goal}")
+        self._log(f"GOAL: {goal}")
         self._log(f"{'='*60}\n")
         
         # THE AUTONOMOUS LOOP
@@ -73,7 +73,7 @@ class AutonomousAgent:
             # Check if we can continue
             can_continue, reason = state.can_continue()
             if not can_continue:
-                self._log(f"\n⏹️  Stopping: {reason}")
+                self._log(f"\nStopping: {reason}")
                 break
             
             # STEP 1: Decide next action
@@ -82,20 +82,20 @@ class AutonomousAgent:
             try:
                 decision = self._decide_with_retry(state)
             except Exception as e:
-                self._log(f"❌ Decision failed: {e}")
+                self._log(f"[ERROR] Decision failed: {e}")
                 break
             
-            self._log(f"🤔 Decision: {decision.action.value}")
-            self._log(f"💭 Reasoning: {decision.reasoning}")
+            self._log(f"Decision: {decision.action.value}")
+            self._log(f"Reasoning: {decision.reasoning}")
             
             # STEP 2: Execute action
             result = self._execute_with_retry(decision, state)
             
             # STEP 3: Observe result
             if result.success:
-                self._log(f"✅ Success: {self._format_output(result.output)}")
+                self._log(f"[SUCCESS] {self._format_output(result.output)}")
             else:
-                self._log(f"❌ Failed: {result.error}")
+                self._log(f"[FAILED] {result.error}")
             
             # STEP 4: Update state
             state.add_action(decision, result)
@@ -106,7 +106,7 @@ class AutonomousAgent:
             # Check if finished
             if decision.action == ActionType.FINISH and result.success:
                 state.is_complete = True
-                self._log("\n🎉 Task completed!")
+                self._log("\nTask completed!")
                 break
         
         # Print summary
@@ -136,7 +136,7 @@ class AutonomousAgent:
             except Exception as e:
                 last_error = e
                 if attempt < self.max_retries - 1:
-                    self._log(f"⚠️  Decision failed (attempt {attempt + 1}): {e}")
+                    self._log(f"[WARNING] Decision failed (attempt {attempt + 1}): {e}")
                     time.sleep(1)  # Brief pause before retry
         
         raise ValueError(f"Decision failed after {self.max_retries} attempts: {last_error}")
@@ -170,7 +170,7 @@ class AutonomousAgent:
                 return result
             
             if attempt < self.max_retries - 1:
-                self._log(f"⚠️  Retrying action (attempt {attempt + 2})...")
+                self._log(f"[WARNING] Retrying action (attempt {attempt + 2})...")
                 time.sleep(1)
         
         return last_result or ActionResult(
@@ -211,10 +211,10 @@ class AutonomousAgent:
     def _print_summary(self, state: AgentState):
         """Print execution summary."""
         self._log(f"\n{'='*60}")
-        self._log("📊 EXECUTION SUMMARY")
+        self._log("EXECUTION SUMMARY")
         self._log(f"{'='*60}")
         self._log(f"Goal: {state.goal}")
-        self._log(f"Status: {'✅ Complete' if state.is_complete else '⚠️  Incomplete'}")
+        self._log(f"Status: {'Complete' if state.is_complete else 'Incomplete'}")
         self._log(f"Steps taken: {state.current_step}/{state.max_steps}")
         self._log(f"Estimated cost: ${state.total_cost:.4f}")
         

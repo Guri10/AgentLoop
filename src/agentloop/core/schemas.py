@@ -134,7 +134,7 @@ class AgentState(BaseModel):
             action = self.actions_taken[i]
             result = self.action_results[i]
             
-            status = "✓" if result.success else "✗"
+            status = "[SUCCESS]" if result.success else "[FAILED]"
             recent.append(
                 f"{status} Step {i+1}: {action.action.value}\n"
                 f"   Reason: {action.reasoning}\n"

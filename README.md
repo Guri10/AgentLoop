@@ -9,7 +9,7 @@
 
 AgentLoop is not a chatbot or a prompt chain—it's a closed-loop decision system where an LLM repeatedly decides what action to take next based on evolving state until the goal is satisfied.
 
-## 🎬 Quick Demo
+## Quick Demo
 
 ```bash
 # Install from PyPI
@@ -21,7 +21,7 @@ agentloop "Calculate first 10 Fibonacci numbers and save to file"
 
 **Or try the [Live Web Demo](https://github.com/Guri10/AgentLoop)** on Streamlit Cloud
 
-## 🎯 Core Objective
+## Core Objective
 
 This project demonstrates how an LLM can be used as a **decision-making controller** inside a software system, rather than as a text generator. The agent autonomously:
 
@@ -31,7 +31,7 @@ This project demonstrates how an LLM can be used as a **decision-making controll
 - ✅ Recovers from failures
 - ✅ Terminates when the goal is complete
 
-## 🏗️ Architecture
+## Architecture
 
 ### The Fundamental Loop
 
@@ -63,6 +63,7 @@ while goal_not_satisfied:
 ┌─────────────────────────────────────────┐
 │      Action Executor (System)           │
 │  - search_web                           │
+│  - read_url                             │
 │  - run_code                             │
 │  - write_file                           │
 │  - finish                               │
@@ -85,7 +86,7 @@ while goal_not_satisfied:
 4. **Failure Recovery**: Automatic retry with error context
 5. **Safety Limits**: Maximum steps and cost controls
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -144,7 +145,7 @@ python examples/demo_research.py
 python examples/demo_analysis.py
 ```
 
-## 🎮 Available Actions
+## Available Actions
 
 The agent can only interact through these predefined actions:
 
@@ -163,7 +164,22 @@ Search the internet for information.
 }
 ```
 
-### 2. `run_code`
+### 2. `read_url`
+
+Fetch and read content from a specific URL.
+
+```json
+{
+  "action": "read_url",
+  "reasoning": "Extract actual content from the webpage",
+  "input": {
+    "url": "https://example.com/article",
+    "max_length": 5000
+  }
+}
+```
+
+### 3. `run_code`
 
 Execute Python code for analysis or computation.
 
@@ -178,7 +194,7 @@ Execute Python code for analysis or computation.
 }
 ```
 
-### 3. `write_file`
+### 4. `write_file`
 
 Save content to a file.
 
@@ -193,7 +209,7 @@ Save content to a file.
 }
 ```
 
-### 4. `finish`
+### 5. `finish`
 
 Complete the task and terminate.
 
@@ -208,7 +224,7 @@ Complete the task and terminate.
 }
 ```
 
-## 📊 State Management
+## State Management
 
 The agent maintains complete state throughout execution:
 
@@ -229,7 +245,7 @@ State is passed to the LLM at each decision point, enabling:
 - Avoiding repeated mistakes
 - Contextual decision-making
 
-## 🛡️ Failure Handling
+## Failure Handling
 
 AgentLoop implements robust error recovery:
 
@@ -238,7 +254,7 @@ AgentLoop implements robust error recovery:
 3. **State Preservation**: All failures are recorded and influence future decisions
 4. **Safety Limits**: Automatic termination at step/cost limits
 
-## 💰 Cost Tracking
+## Cost Tracking
 
 The system tracks API usage and estimates costs:
 
@@ -254,49 +270,49 @@ Typical costs with GPT-4o-mini:
 - Medium task (10-20 steps): $0.15 - $0.50
 - Complex task (20-40 steps): $0.50 - $2.00
 
-## 🧪 Example: End-to-End Execution
+## Example: End-to-End Execution
 
 ```bash
 $ python -m agentloop.main "Find recent Python web frameworks and create a comparison"
 
 ============================================================
-🎯 GOAL: Find recent Python web frameworks and create a comparison
+GOAL: Find recent Python web frameworks and create a comparison
 ============================================================
 
 --- Step 1/50 ---
-🤔 Decision: search_web
-💭 Reasoning: Need to find current information about Python web frameworks
-✅ Success: 5 items
+Decision: search_web
+Reasoning: Need to find current information about Python web frameworks
+Success: 5 items
 
 --- Step 2/50 ---
-🤔 Decision: search_web
-💭 Reasoning: Get more details on specific frameworks
-✅ Success: 5 items
+Decision: search_web
+Reasoning: Get more details on specific frameworks
+Success: 5 items
 
 --- Step 3/50 ---
-🤔 Decision: write_file
-💭 Reasoning: Compile findings into comparison document
-✅ Success: File written successfully: ./output/framework_comparison.md
+Decision: write_file
+Reasoning: Compile findings into comparison document
+Success: File written successfully: ./output/framework_comparison.md
 
 --- Step 4/50 ---
-🤔 Decision: finish
-💭 Reasoning: Goal accomplished - comparison created
-✅ Success: {'summary': 'Created comparison...', 'artifacts': [...]}
+Decision: finish
+Reasoning: Goal accomplished - comparison created
+Success: {'summary': 'Created comparison...', 'artifacts': [...]}
 
-🎉 Task completed!
+Task completed!
 
 ============================================================
-📊 EXECUTION SUMMARY
+EXECUTION SUMMARY
 ============================================================
 Goal: Find recent Python web frameworks and create a comparison
-Status: ✅ Complete
+Status: Complete
 Steps taken: 4/50
 Estimated cost: $0.0234
 Success rate: 4/4 actions
 ============================================================
 ```
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 AgentLoop/
@@ -319,7 +335,7 @@ AgentLoop/
 └── README.md
 ```
 
-## 🔬 Technical Details
+## Technical Details
 
 ### Why This Architecture?
 
@@ -391,11 +407,11 @@ Potential improvements:
 - [ ] Parallel action execution
 - [ ] Cost optimization with caching
 
-## 📝 License
+## License
 
 MIT License - see LICENSE file
 
-## 🤝 Contributing
+## Contributing
 
 Contributions welcome! This is a learning project demonstrating autonomous agents.
 
